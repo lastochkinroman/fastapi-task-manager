@@ -31,3 +31,9 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="Пользователь не найден")
     return db_user
+
+@app.post("/users/{user.id}/tasks/", response_model=schemas.TaskOut)
+def create_task_for_user(
+    user_id: int, task: schemas.TaskCreate, db: Session = Depends(get_db)
+):
+    return crud.create_user_task(db=db, task=task, user_id=user_id)

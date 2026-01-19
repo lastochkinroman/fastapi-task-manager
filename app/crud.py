@@ -27,3 +27,10 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
+
+def create_user_task(db: Session, task: schemas.TaskCreate, user_id: int):
+    db_task = models.Task(**task.model_dump(), owner_id = user_id)
+    db.add(db_task)
+    db.commit()
+    db.refresh(db_task)
+    return db_task
