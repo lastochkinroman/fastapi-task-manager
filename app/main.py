@@ -37,3 +37,17 @@ def create_task_for_user(
     user_id: int, task: schemas.TaskCreate, db: Session = Depends(get_db)
 ):
     return crud.create_user_task(db=db, task=task, user_id=user_id)
+
+@app.patch("/tasks/{task_id}", response_model = schemas.TaskOut)
+def update_task_status(task_id: int, completed: bool, db: Session = Depends(get_db)):
+    db_task = crud.update_task(db, task_id=task_id, completed=completed)
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Задача не найдена")
+    return db_task
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    success = crud.delete_task(db, task_id=task_id)
+    if not success: 
+        raise HTTPException(status_code=404, detail='Задача не найдена')
+    return {"message": "Задача успешно удалена"}
