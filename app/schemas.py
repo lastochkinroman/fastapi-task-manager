@@ -1,18 +1,6 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 
-class UserBase(BaseModel):
-    email: EmailStr
-
-class UserCreate(UserBase):
-    password: str
-
-class UserOut(UserBase):
-    id: int
-    is_active: bool
-
-    class Config:
-        from_attributes = True
 
 class TaskBase(BaseModel):
     title: str
@@ -27,4 +15,20 @@ class TaskOut(TaskBase):
     owner_id: int
     class Config:
         from_attributes = True
-        
+
+
+
+class UserBase(BaseModel):
+    email: EmailStr
+
+class UserCreate(UserBase):
+    password: str
+
+class UserOut(UserBase):
+    id: int
+    is_active: bool
+    tasks: List[TaskOut] = []
+
+    class Config:
+        from_attributes = True
+
